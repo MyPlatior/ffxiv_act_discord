@@ -21,7 +21,7 @@ namespace FFXIV_Discord
     class Program : IActPluginV1
     {
 
-        private static System.Timers.Timer discordTimer;
+        private static System.Timers.Timer timer;
         private static DiscordRpcClient discord;
         private static bool gameRunning;
         private static Timestamps discordStartTime;
@@ -66,17 +66,17 @@ namespace FFXIV_Discord
         public void DeInitPlugin()
         {
             discord.Dispose();
-            discordTimer.Dispose();
+            timer.Dispose();
         }
 
         private static void SetTimer()
         {
             // Create a timer with a two second interval.
-            discordTimer = new System.Timers.Timer(5000);
+            timer = new System.Timers.Timer(5000);
             // Hook up the Elapsed event for the timer. 
-            discordTimer.Elapsed += UpdateRPC;
-            discordTimer.AutoReset = true;
-            discordTimer.Enabled = true;
+            timer.Elapsed += UpdateRPC;
+            timer.AutoReset = true;
+            timer.Start();
         }
 
         private static bool Attach()
@@ -110,33 +110,51 @@ namespace FFXIV_Discord
             {
                 string smallImageText = null;
                 string smallImageKey = null;
-                string details = null;
-                string status = null;
-                string job;
-                string jobLong;
-                int level;
-                string playername;
+                string details;
+                string status;
 
                 Reader.GetActors();
                 CurrentPlayerResult cpr = Reader.GetCurrentPlayer();
                 var player = ActorItem.CurrentUser;
 
+                
                 if (cpr.CurrentPlayer.Name != null && cpr.CurrentPlayer.Name != "" && player != null)
                 {
-                    job = UIStrings.JobAbbreviations[player.Job];
-                    jobLong = UIStrings.JobNames[player.Job];
-                    level = player.Level;
-                    playername = player.Name;
+                    details = String.Format("{0} ({1} Lv{2})", cpr.CurrentPlayer.Name, UIStrings.JobAbbreviations[player.Job], player.Level);
+                    smallImageKey = UIStrings.JobAbbreviations[player.Job].ToLower();
+                    smallImageText = String.Format("Level {0} {1}", player.Level, UIStrings.JobNames[player.Job]);
+                    string zone = ActGlobals.oFormActMain.CurrentZone;
 
-                    details = playername + " (" + job + " Lv" + level + ")";
-                    smallImageKey = job.ToLower();
-                    smallImageText = "Level " + level + " " + jobLong;
-                    status = ActGlobals.oFormActMain.CurrentZone;
+                    switch (player.IconID)
+                    {
+                        case 15:
+                            status = String.Format("Watching a cutscene");
+                            break;
+                        case 17:
+                            status = String.Format("AFK in {0}", zone);
+                            break;
+                        case 18:
+                            status = String.Format("Taking screenshots");
+                            break;
+                        case 22:
+                            status = String.Format("RP'ing in {0}", zone);
+                            break;
+                        case 25:
+                            status = String.Format("Waiting for Duty Finder");
+                            break;
+                        case 26:
+                            status = String.Format("Recruiting Party Members");
+                            break;
+                        default:
+                            status = zone;
+                            break;
+                    }
 
                 }
                 else
                 {
                     details = "In Menus";
+                    status = null;
                 }
 
                 if (discord.IsInitialized)
