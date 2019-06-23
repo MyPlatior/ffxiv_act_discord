@@ -21,10 +21,12 @@ namespace FFXIV_Discord
     class Program : IActPluginV1
     {
 
-        private static System.Timers.Timer timer;
-        private static DiscordRpcClient discord;
-        private static bool gameRunning;
-        private static Timestamps discordStartTime;
+        private System.Timers.Timer timer;
+        private DiscordRpcClient discord;
+        private bool gameRunning;
+        private Timestamps discordStartTime;
+
+        private const string DISCORD_CLIENT_ID = "590267016842051654";
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
@@ -47,7 +49,7 @@ namespace FFXIV_Discord
             //    Console.WriteLine("Received Update! {0}", e.Presence);
             //};
 
-            discord = new DiscordRpcClient("590267016842051654");
+            discord = new DiscordRpcClient(DISCORD_CLIENT_ID);
 
             //Connect to the RPC
             if (gameRunning)
@@ -69,7 +71,7 @@ namespace FFXIV_Discord
             timer.Dispose();
         }
 
-        private static void SetTimer()
+        private void SetTimer()
         {
             // Create a timer with a two second interval.
             timer = new System.Timers.Timer(5000);
@@ -79,7 +81,7 @@ namespace FFXIV_Discord
             timer.Start();
         }
 
-        private static bool Attach()
+        private bool Attach()
         {
             if (MemoryHandler.Instance.IsAttached)
             {
@@ -102,7 +104,7 @@ namespace FFXIV_Discord
             return false;
         }
 
-        private static void UpdateRPC(Object source, ElapsedEventArgs e)
+        private void UpdateRPC(Object source, ElapsedEventArgs e)
         {
             gameRunning = Attach();
 
@@ -182,7 +184,7 @@ namespace FFXIV_Discord
             if (gameRunning && !discord.IsInitialized)
             {
                 //start discord if not running and game is running
-                discord = new DiscordRpcClient("590267016842051654");
+                discord = new DiscordRpcClient(DISCORD_CLIENT_ID);
                 discordStartTime = Timestamps.Now;
                 discord.Initialize();
             }
