@@ -33,22 +33,6 @@ namespace FFXIV_Discord
 
             gameRunning = Attach();
 
-            //CONNECT TO CANARY INSTEAD OF NORMAL DISC
-            //System.Environment.SetEnvironmentVariable("DISCORD_INSTANCE_ID", "0");
-
-            //discord.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
-
-            ////Subscribe to events
-            //discord.OnReady += (sender, e) =>
-            //{
-            //    Console.WriteLine("Received Ready from user {0}", e.User.Username);
-            //};
-
-            //discord.OnPresenceUpdate += (sender, e) =>
-            //{
-            //    Console.WriteLine("Received Update! {0}", e.Presence);
-            //};
-
             discord = new DiscordRpcClient(DISCORD_CLIENT_ID);
 
             //Connect to the RPC
@@ -73,9 +57,8 @@ namespace FFXIV_Discord
 
         private void SetTimer()
         {
-            // Create a timer with a two second interval.
+            // timer with a 5 second interval.
             timer = new System.Timers.Timer(5000);
-            // Hook up the Elapsed event for the timer. 
             timer.Elapsed += UpdateRPC;
             timer.AutoReset = true;
             timer.Start();
