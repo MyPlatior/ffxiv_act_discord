@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Sharlayan;
 using Sharlayan.Core;
 using Sharlayan.Models;
 using Sharlayan.Models.ReadResults;
-using Sharlayan.Utilities;
 using DiscordRPC;
-using DiscordRPC.Logging;
 using Advanced_Combat_Tracker;
 using System.Windows.Forms;
 using System.Timers;
@@ -102,13 +96,14 @@ namespace FFXIV_Discord
                 CurrentPlayerResult cpr = Reader.GetCurrentPlayer();
                 var player = ActorItem.CurrentUser;
 
-                
+
                 if (cpr.CurrentPlayer.Name != null && cpr.CurrentPlayer.Name != "" && player != null)
                 {
-                    details = String.Format("{0} ({1} Lv{2})", cpr.CurrentPlayer.Name, UIStrings.JobAbbreviations[player.Job], player.Level);
-                    smallImageKey = UIStrings.JobAbbreviations[player.Job].ToLower();
-                    smallImageText = String.Format("Level {0} {1}", player.Level, UIStrings.JobNames[player.Job]);
-                    string zone = ActGlobals.oFormActMain.CurrentZone;
+                    details = String.Format("{0} ({1} Lv{2})", cpr.CurrentPlayer.Name, UIStrings.JobAbbreviations[cpr.CurrentPlayer.Job], player.Level);
+                    smallImageKey = UIStrings.JobAbbreviations[cpr.CurrentPlayer.Job].ToLower();
+                    smallImageText = String.Format("Level {0} {1}", player.Level, UIStrings.JobNames[cpr.CurrentPlayer.Job]);
+
+                    string zone = UIStrings.ZoneNames.ContainsKey(player.MapTerritory) ? UIStrings.ZoneNames[player.MapTerritory] : ActGlobals.oFormActMain.CurrentZone;
 
                     switch (player.IconID)
                     {
@@ -219,9 +214,9 @@ namespace FFXIV_Discord
                 { Sharlayan.Core.Enums.Actor.Job.BLM, "Black Mage" },
                 { Sharlayan.Core.Enums.Actor.Job.SMN, "Summoner" },
                 { Sharlayan.Core.Enums.Actor.Job.RDM, "Red Mage" },
-                { Sharlayan.Core.Enums.Actor.Job.BLU, "Blue Mage" }
-                //{ Sharlayan.Core.Enums.Actor.Job.GBR, "Gunbreaker" }
-                //{ Sharlayan.Core.Enums.Actor.Job.DNC, "Dancer" }
+                { Sharlayan.Core.Enums.Actor.Job.BLU, "Blue Mage" },
+                { Sharlayan.Core.Enums.Actor.Job.GNB, "Gunbreaker" },
+                { Sharlayan.Core.Enums.Actor.Job.DNC, "Dancer" }
             };
             public readonly static Dictionary<Sharlayan.Core.Enums.Actor.Job, string> JobAbbreviations = new Dictionary<Sharlayan.Core.Enums.Actor.Job, string>
             {
@@ -265,11 +260,22 @@ namespace FFXIV_Discord
                 { Sharlayan.Core.Enums.Actor.Job.BLM, "BLM" },
                 { Sharlayan.Core.Enums.Actor.Job.SMN, "SMN" },
                 { Sharlayan.Core.Enums.Actor.Job.RDM, "RDM" },
-                { Sharlayan.Core.Enums.Actor.Job.BLU, "BLU" }
-                //{ Sharlayan.Core.Enums.Actor.Job.GBR, "GBR" }
-                //{ Sharlayan.Core.Enums.Actor.Job.DNC, "DNC" }
+                { Sharlayan.Core.Enums.Actor.Job.BLU, "BLU" },
+                { Sharlayan.Core.Enums.Actor.Job.GNB, "GNB" },
+                { Sharlayan.Core.Enums.Actor.Job.DNC, "DNC" }
             };
+            public readonly static Dictionary<uint, string> ZoneNames = new Dictionary<uint, string>
+            {
+                //Shadowbringers Zones
+                { 813, "Lakeland"},
+                { 814, "Kholusia"},
+                { 815, "Ahm Areng"},
+                { 819, "The Crystarium"},
+                { 820, "Eulmore" },
+                { 842, "The Syrcus Trench" },
+                { 844, "The Ocular" }
 
+            };
         }
     }
 }
