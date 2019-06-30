@@ -103,7 +103,7 @@ namespace FFXIV_Discord
                     smallImageKey = UIStrings.JobAbbreviations[cpr.CurrentPlayer.Job].ToLower();
                     smallImageText = String.Format("Level {0} {1}", player.Level, UIStrings.JobNames[cpr.CurrentPlayer.Job]);
 
-                    string zone = UIStrings.ZoneNames.ContainsKey(player.MapTerritory) ? UIStrings.ZoneNames[player.MapTerritory] : ActGlobals.oFormActMain.CurrentZone;
+                    string zone = ActGlobals.oFormActMain.CurrentZone;
 
                     switch (player.IconID)
                     {
@@ -263,18 +263,6 @@ namespace FFXIV_Discord
                 { Sharlayan.Core.Enums.Actor.Job.BLU, "BLU" },
                 { Sharlayan.Core.Enums.Actor.Job.GNB, "GNB" },
                 { Sharlayan.Core.Enums.Actor.Job.DNC, "DNC" }
-            };
-            public readonly static Dictionary<uint, string> ZoneNames = new Dictionary<uint, string>
-            {
-                //Shadowbringers Zones
-                { 813, "Lakeland"},
-                { 814, "Kholusia"},
-                { 815, "Ahm Areng"},
-                { 819, "The Crystarium"},
-                { 820, "Eulmore" },
-                { 842, "The Syrcus Trench" },
-                { 844, "The Ocular" }
-
             };
         }
     }
