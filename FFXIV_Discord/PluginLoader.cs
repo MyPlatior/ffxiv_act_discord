@@ -11,7 +11,6 @@ namespace FFXIV_Discord
     {
 
         DiscordPlugin discordPlugin;
-        //AssemblyResolver assemblyResolver;
         string pluginDirectory;
 
         public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
@@ -42,7 +41,6 @@ namespace FFXIV_Discord
             }
 
             return null;
-            //do something
         }
 
 

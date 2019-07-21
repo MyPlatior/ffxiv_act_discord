@@ -122,8 +122,8 @@ namespace FFXIV_Discord
                     smallImageText = String.Format("Level {0} {1}", player.Level, UIStrings.JobNames[cpr.CurrentPlayer.Job]);
 
                     string zone = ActGlobals.oFormActMain.CurrentZone;
+                    pluginStatusText.Text = String.Format("Character Found: {0}", details);
 
-                    pluginStatusText.Text = player.IconID.ToString();
                     switch (player.IconID)
                     {
                         case 15:
